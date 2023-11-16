@@ -1,7 +1,7 @@
 // Ready to script!
 
 // Style variables
-const gridBlockWidth = 32;
+const gridBlockWidth = 16;
 let gridBlockHeight = gridBlockWidth; // Should be the same as the width
 const gridBorderWidth = 2;
 const gridBorderHeight = gridBorderWidth;
@@ -19,8 +19,9 @@ function removeAllChildNodes(parent) {
     }
 }
 function createGrid(){
-    // This function:
-    // Creates the grid if it doesn't exist
+    // For this function:
+    // 1) Check if the grid exists already and if it does, delete all the divs before creating the grid
+    // 2) Otherwise, create the grid if there's none
     if (container.hasChildNodes() === false) {
         for (let i = 0; i < gridSize * gridSize; i++) {
             const div = document.createElement('div');
@@ -36,21 +37,16 @@ function createGrid(){
             container.style.width = containerWidth;
             container.style.height = 'auto';
             
-            // The grid blocks are children of the container
-            document.body.appendChild(div);
-            container.appendChild(div);  
-
-            // Change the color of the grid block when hovering
-            div.addEventListener('mouseover', () => {
+            div.addEventListener('mousemove', () => {
                 div.style.backgroundColor = 'red';
             });
-            
-            // Return grid block color to original when cursor is not hovering
-            div.addEventListener('mouseout', () => {
-                div.style.backgroundColor = 'initial';
-            });
+        
+            // div.addEventListener('mouseout', () => {
+            //     div.style.backgroundColor = 'initial';
+            // });
+            document.body.appendChild(div);
+            container.appendChild(div);  
         }
-    // If a grid exists already, delete all the divs before creating another one
     } else {
         removeAllChildNodes(container);
         for (let i = 0; i < gridSize * gridSize; i++) {
@@ -66,32 +62,29 @@ function createGrid(){
             // Makes the grid size the right size depending on user input
             container.style.width = containerWidth;
         
-            div.addEventListener('mouseover', () => {
+            div.addEventListener('mousedown', () => {
                 div.style.backgroundColor = 'red';
             });
         
-            div.addEventListener('mouseout', () => {
-                div.style.backgroundColor = 'initial';
-            });
+            // div.addEventListener('mouseout', () => {
+            //     div.style.backgroundColor = 'initial';
+            // });
             document.body.appendChild(div);
             container.appendChild(div);  
         }
     }
 }
 
-// Initializes the default 16x16 grid
 createGrid();
-
 
 // Listens to the user click and runs the function
 btnChangeSize.addEventListener('click', () => {
     gridSize = Number(prompt('Enter a new grid size:'));
     if (gridSize >= 100) {
-        alert('You may not go beyond 100, please enter a smaller number.');
-    } else {
-        containerWidth = `${(gridBlockWidth + gridBorderWidth + gridBorderHeight) * gridSize}px`;
-        createGrid();
+        alert('Only grids below 100 allowed. Please enter a lower number.');
     }
+    containerWidth = `${(gridBlockWidth + gridBorderWidth + gridBorderHeight) * gridSize}px`;
+    createGrid();
 });
 
 // Testing for element existence
