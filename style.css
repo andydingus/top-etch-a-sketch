@@ -1,29 +1,28 @@
 /* Ready to style! */
-html {
+body {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 #btnContainer {
-    display: flex;
-    justify-content: center;
     padding: 10px;
 }
 
 #container {
     display: flex;
     flex-wrap: wrap;
-    width: 576px;
     height: auto;
     justify-content: center;
     align-items: center;
 }
 
 .grid {
-    width: 32px;
-    height: 32px;
+    /* width: 32px;
+    height: 32px; */
     border-style: solid;
     border-width: 2px;
     /* display: flex; */
-    gap: 20px;
+    /* gap: 20px; */
 }
