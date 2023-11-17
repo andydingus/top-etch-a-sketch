@@ -4,34 +4,19 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-
-#bigContainer {
-    /* width: 360px; */
-    height: auto;
-    border: 2px solid red;
-    display: flex;
-    justify-content: center;
+    gap: 10px;
 }
 
 #btnContainer {
-    padding: 10px;
+    padding-top: 10px;
 }
 
 #container {
-    display: flex;
-    flex-wrap: wrap;
-    height: auto;
-    padding: 20px;
+    display: grid;
+    height: 400px;
+    width: 400px;
+    border: 2px solid;
+    /* height: auto; */
     justify-content: center;
     align-items: center;
-}
-
-.grid {
-    /* width: 32px;
-    height: 32px; */
-    border-style: solid;
-    border-width: 2px;
-    /* display: flex; */
-    /* gap: 20px; */
 }

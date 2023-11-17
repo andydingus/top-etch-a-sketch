@@ -1,18 +1,20 @@
 // Ready to script!
 
 // Style variables
-const gridBlockWidth = 16;
-let gridBlockHeight = gridBlockWidth; // Should be the same as the width
-const gridBorderWidth = 2;
-const gridBorderHeight = gridBorderWidth;
+// let gridBlockWidth = 16; // **** THIS NEEDS TO BE SMALLER AS THE GRID SIZE INCREASES, LARGER AS THE GRID SIZE DECREASES
+// let gridBlockHeight = gridBlockWidth; // Should be the same as the width
 let gridSize = 16;
-let containerWidth = `${(gridBlockWidth + gridBorderWidth + gridBorderHeight) * gridSize}px`;
-const bigContainerWidth = '500px';
+// let containerWidth = `${(gridBlockWidth + gridBorderWidth + gridBorderHeight) * gridSize}px`;
+const containerWidth = 400; // Should always remain the same, the grid will adjust
+const containerHeight = containerWidth;
+
+let mouseDown = false;
+document.body.onmousedown = () => (mouseDown = true);
+document.body.onmouseup = () => (mouseDown = false);
 
 // Element constants
 const btnChangeSize = document.getElementById('btnChangeSize');
 const container = document.getElementById('container');
-const bigContainer = document.getElementById('bigContainer');
 
 // Credit: https://www.javascripttutorial.net/dom/manipulating/remove-all-child-nodes/
 function removeAllChildNodes(parent) {
@@ -29,42 +31,47 @@ function unselectGridBlock() {
     this.style.backgroundColor = 'initial';
 }
 
+function colorGridBlock(e) {
+    if (e.type === 'mouseover' && !mouseDown) return
+    e.target.style.backgroundColor = 'red';
+}
+
 function createGrid(){
+    // Ensures that the grid-blocks won't change the grid's size
+    container.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
+    container.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
+
     // For this function:
     // 1) Check if the grid exists already and if it does, delete all the divs before creating the grid
     // 2) Otherwise, create the grid if there's none
     if (container.hasChildNodes() === false) {
         for (let i = 0; i < gridSize * gridSize; i++) {
             const div = document.createElement('div');
-            div.className = 'grid';
+            div.className = 'grid-block';
 
             // Styles for the grid blocks
-            div.style.width = `${gridBlockWidth}px`;
-            div.style.height = `${gridBlockHeight}px`;
-            div.style.borderWidth = `${gridBorderWidth}px`;
-            div.style.borderHeight = `${gridBorderHeight}px`;
-
-            // Makes the grid size the right size depending on user input
-            container.style.width = containerWidth;
-            container.style.height = 'auto';
-            bigContainer.style.width = bigContainerWidth;
-            bigContainer.style.height = 'auto';
+            div.style.width = `${containerWidth / gridSize}px`;
+            div.style.height = `${containerHeight / gridSize}px`;
 
             // New approach: 'select' the grid block if the cursor is hovering over it
             div.addEventListener('mousemove', selectGridBlock);
 
             // ...and then 'unselect' it once the cursor is out of the block
             div.addEventListener('mouseout', unselectGridBlock);
+            div.addEventListener('mouseover', colorGridBlock);
+            // Testing for coloring while holding down left click
+            div.addEventListener('mousedown', colorGridBlock);
 
             // Once grid block is filled, let it remain filled
-            div.addEventListener('click', () => {
-                div.style.backgroundColor = 'red';
-                div.removeEventListener('mousemove', selectGridBlock);
-                div.removeEventListener('mouseout', unselectGridBlock);               
-            });
+            // div.addEventListener('click', () => {
+            //     div.style.backgroundColor = 'red';
+            //     div.removeEventListener('mousemove', selectGridBlock);
+            //     div.removeEventListener('mouseout', unselectGridBlock);               
+            // });
+
+            
             
             // Finally, add it the body and container as children
-            document.body.appendChild(div);
             container.appendChild(div);  
         }
     } else {
@@ -74,11 +81,9 @@ function createGrid(){
             const div = document.createElement('div');
             div.className = 'grid';
 
-            div.style.width = `${gridBlockWidth}px`;
-            div.style.height = `${gridBlockHeight}px`;
-            div.style.borderWidth = `${gridBorderWidth}px`;
-            div.style.borderHeight = `${gridBorderHeight}px`;
-            container.style.width = containerWidth;
+            // Styles for the grid blocks
+            div.style.width = `${containerWidth / gridSize}px`;
+            div.style.height = `${containerHeight / gridSize}px`;
         
             div.addEventListener('mousemove', selectGridBlock);
             div.addEventListener('mouseout', unselectGridBlock);
@@ -87,7 +92,6 @@ function createGrid(){
                 div.removeEventListener('mousemove', selectGridBlock);
                 div.removeEventListener('mouseout', unselectGridBlock);               
             });
-            document.body.appendChild(div);
             container.appendChild(div); 
         }
     }
@@ -101,7 +105,6 @@ btnChangeSize.addEventListener('click', () => {
     if (gridSize >= 100) {
         alert('Only grids below 100 allowed. Please enter a lower number.');
     } else {
-        containerWidth = `${(gridBlockWidth + gridBorderWidth + gridBorderHeight) * gridSize}px`;
         createGrid();
     } 
 });
