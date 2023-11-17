@@ -18,6 +18,15 @@ function removeAllChildNodes(parent) {
         parent.removeChild(parent.firstChild);
     }
 }
+
+function selectGridBlock() {
+    this.style.backgroundColor = 'gray';
+}
+
+function unselectGridBlock() {
+    this.style.backgroundColor = 'initial';
+}
+
 function createGrid(){
     // For this function:
     // 1) Check if the grid exists already and if it does, delete all the divs before creating the grid
@@ -36,41 +45,46 @@ function createGrid(){
             // Makes the grid size the right size depending on user input
             container.style.width = containerWidth;
             container.style.height = 'auto';
-            
-            div.addEventListener('mousemove', () => {
+
+            // New approach: 'select' the grid block if the cursor is hovering over it
+            div.addEventListener('mousemove', selectGridBlock);
+
+            // ...and then 'unselect' it once the cursor is out of the block
+            div.addEventListener('mouseout', unselectGridBlock);
+
+            // Once grid block is filled, let it remain filled
+            div.addEventListener('click', () => {
                 div.style.backgroundColor = 'red';
+                div.removeEventListener('mousemove', selectGridBlock);
+                div.removeEventListener('mouseout', unselectGridBlock);               
             });
-        
-            // div.addEventListener('mouseout', () => {
-            //     div.style.backgroundColor = 'initial';
-            // });
+            
+            // Finally, add it the body and container as children
             document.body.appendChild(div);
             container.appendChild(div);  
         }
     } else {
+        // Same as above, just erases the previous grid before creating one
         removeAllChildNodes(container);
         for (let i = 0; i < gridSize * gridSize; i++) {
             const div = document.createElement('div');
             div.className = 'grid';
 
-            // Styles for the grid blocks
             div.style.width = `${gridBlockWidth}px`;
             div.style.height = `${gridBlockHeight}px`;
             div.style.borderWidth = `${gridBorderWidth}px`;
             div.style.borderHeight = `${gridBorderHeight}px`;
-
-            // Makes the grid size the right size depending on user input
             container.style.width = containerWidth;
         
-            div.addEventListener('mousedown', () => {
+            div.addEventListener('mousemove', selectGridBlock);
+            div.addEventListener('mouseout', unselectGridBlock);
+            div.addEventListener('click', () => {
                 div.style.backgroundColor = 'red';
+                div.removeEventListener('mousemove', selectGridBlock);
+                div.removeEventListener('mouseout', unselectGridBlock);               
             });
-        
-            // div.addEventListener('mouseout', () => {
-            //     div.style.backgroundColor = 'initial';
-            // });
             document.body.appendChild(div);
-            container.appendChild(div);  
+            container.appendChild(div); 
         }
     }
 }
@@ -82,9 +96,10 @@ btnChangeSize.addEventListener('click', () => {
     gridSize = Number(prompt('Enter a new grid size:'));
     if (gridSize >= 100) {
         alert('Only grids below 100 allowed. Please enter a lower number.');
-    }
-    containerWidth = `${(gridBlockWidth + gridBorderWidth + gridBorderHeight) * gridSize}px`;
-    createGrid();
+    } else {
+        containerWidth = `${(gridBlockWidth + gridBorderWidth + gridBorderHeight) * gridSize}px`;
+        createGrid();
+    } 
 });
 
 // Testing for element existence
