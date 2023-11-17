@@ -23,13 +23,13 @@ function removeAllChildNodes(parent) {
     }
 }
 
-function selectGridBlock() {
-    this.style.backgroundColor = 'gray';
-}
+// function selectGridBlock() {
+//     this.style.backgroundColor = 'gray';
+// }
 
-function unselectGridBlock() {
-    this.style.backgroundColor = 'initial';
-}
+// function unselectGridBlock() {
+//     this.style.backgroundColor = 'initial';
+// }
 
 function colorGridBlock(e) {
     if (e.type === 'mouseover' && !mouseDown) return
@@ -53,24 +53,15 @@ function createGrid(){
             div.style.width = `${containerWidth / gridSize}px`;
             div.style.height = `${containerHeight / gridSize}px`;
 
-            // New approach: 'select' the grid block if the cursor is hovering over it
-            div.addEventListener('mousemove', selectGridBlock);
-
-            // ...and then 'unselect' it once the cursor is out of the block
-            div.addEventListener('mouseout', unselectGridBlock);
+            // Allows for click-hold coloring
             div.addEventListener('mouseover', colorGridBlock);
-            // Testing for coloring while holding down left click
             div.addEventListener('mousedown', colorGridBlock);
-
             // Once grid block is filled, let it remain filled
             // div.addEventListener('click', () => {
             //     div.style.backgroundColor = 'red';
             //     div.removeEventListener('mousemove', selectGridBlock);
             //     div.removeEventListener('mouseout', unselectGridBlock);               
-            // });
-
-            
-            
+            // });     
             // Finally, add it the body and container as children
             container.appendChild(div);  
         }
@@ -84,14 +75,15 @@ function createGrid(){
             // Styles for the grid blocks
             div.style.width = `${containerWidth / gridSize}px`;
             div.style.height = `${containerHeight / gridSize}px`;
-        
-            div.addEventListener('mousemove', selectGridBlock);
-            div.addEventListener('mouseout', unselectGridBlock);
-            div.addEventListener('click', () => {
-                div.style.backgroundColor = 'red';
-                div.removeEventListener('mousemove', selectGridBlock);
-                div.removeEventListener('mouseout', unselectGridBlock);               
-            });
+
+            // Allows for click-hold coloring
+            div.addEventListener('mouseover', colorGridBlock);
+            div.addEventListener('mousedown', colorGridBlock);
+            // div.addEventListener('click', () => {
+            //     div.style.backgroundColor = 'red';
+            //     div.removeEventListener('mousemove', selectGridBlock);
+            //     div.removeEventListener('mouseout', unselectGridBlock);               
+            // });
             container.appendChild(div); 
         }
     }
