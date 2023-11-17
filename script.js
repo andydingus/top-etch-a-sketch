@@ -7,10 +7,12 @@ const gridBorderWidth = 2;
 const gridBorderHeight = gridBorderWidth;
 let gridSize = 16;
 let containerWidth = `${(gridBlockWidth + gridBorderWidth + gridBorderHeight) * gridSize}px`;
+const bigContainerWidth = '500px';
 
 // Element constants
 const btnChangeSize = document.getElementById('btnChangeSize');
 const container = document.getElementById('container');
+const bigContainer = document.getElementById('bigContainer');
 
 // Credit: https://www.javascripttutorial.net/dom/manipulating/remove-all-child-nodes/
 function removeAllChildNodes(parent) {
@@ -45,6 +47,8 @@ function createGrid(){
             // Makes the grid size the right size depending on user input
             container.style.width = containerWidth;
             container.style.height = 'auto';
+            bigContainer.style.width = bigContainerWidth;
+            bigContainer.style.height = 'auto';
 
             // New approach: 'select' the grid block if the cursor is hovering over it
             div.addEventListener('mousemove', selectGridBlock);
