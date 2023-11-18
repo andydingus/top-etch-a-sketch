@@ -1,20 +1,37 @@
-// Ready to script!
+// CONSTANTS
+const CONTAINER_WIDTH = 400; // Should always remain the same, the grid will adjust
+const CONTAINER_HEIGHT = CONTAINER_WIDTH;
 
-// Style variables
-// let gridBlockWidth = 16; // **** THIS NEEDS TO BE SMALLER AS THE GRID SIZE INCREASES, LARGER AS THE GRID SIZE DECREASES
-// let gridBlockHeight = gridBlockWidth; // Should be the same as the width
+//// COLORS
+const RED = "rgb(255,0,0)";
+const BLUE = "rgb(0,0,255)";
+const GREEN = "rgb(0,255,0)";
+const YELLOW = "rgb(255,255,0)";
+const ORANGE = "rgb(255,165,0)";
+const INDIGO = "rgb(75,0,130)";
+const PURPLE = "rgb(127,0,255)";
+const COLORS = [RED, BLUE, GREEN, YELLOW, ORANGE, INDIGO, PURPLE];
+
+//// MODES
+const DEFAULT_MODE = true;
+
+
+// Element variables
+const btnChangeSize = document.getElementById('btnChangeSize');
+const btnRainbowMode = document.getElementById('btnRainbowMode');
+const container = document.getElementById('container');
+const gridInfo = document.getElementById('gridInfo');
+
+// Variables
 let gridSize = 16;
-// let containerWidth = `${(gridBlockWidth + gridBorderWidth + gridBorderHeight) * gridSize}px`;
-const containerWidth = 400; // Should always remain the same, the grid will adjust
-const containerHeight = containerWidth;
-
 let mouseDown = false;
+let selectedColor = RED;
+let colorMode = DEFAULT_MODE;
+
+
+// Needed for click-hold coloring
 document.body.onmousedown = () => (mouseDown = true);
 document.body.onmouseup = () => (mouseDown = false);
-
-// Element constants
-const btnChangeSize = document.getElementById('btnChangeSize');
-const container = document.getElementById('container');
 
 // Credit: https://www.javascripttutorial.net/dom/manipulating/remove-all-child-nodes/
 function removeAllChildNodes(parent) {
@@ -23,20 +40,18 @@ function removeAllChildNodes(parent) {
     }
 }
 
-// function selectGridBlock() {
-//     this.style.backgroundColor = 'gray';
-// }
-
-// function unselectGridBlock() {
-//     this.style.backgroundColor = 'initial';
-// }
-
 function colorGridBlock(e) {
     if (e.type === 'mouseover' && !mouseDown) return
-    e.target.style.backgroundColor = 'red';
+    if (colorMode === DEFAULT_MODE) {
+        e.target.style.backgroundColor = selectedColor;
+    } else if (colorMode === RAINBOW_MODE) {
+        for (i = 0; i < COLORS.length; i++) {
+            selectedColor = selectedColor[i];
+        }
+    }
 }
 
-function createGrid(){
+function createGrid() {
     // Ensures that the grid-blocks won't change the grid's size
     container.style.gridTemplateColumns = `repeat(${gridSize}, 1fr)`;
     container.style.gridTemplateRows = `repeat(${gridSize}, 1fr)`;
@@ -50,20 +65,15 @@ function createGrid(){
             div.className = 'grid-block';
 
             // Styles for the grid blocks
-            div.style.width = `${containerWidth / gridSize}px`;
-            div.style.height = `${containerHeight / gridSize}px`;
+            div.style.width = `${parseFloat(CONTAINER_WIDTH / gridSize)}px`;
+            div.style.height = `${parseFloat(CONTAINER_HEIGHT / gridSize)}px`;
 
             // Allows for click-hold coloring
             div.addEventListener('mouseover', colorGridBlock);
             div.addEventListener('mousedown', colorGridBlock);
-            // Once grid block is filled, let it remain filled
-            // div.addEventListener('click', () => {
-            //     div.style.backgroundColor = 'red';
-            //     div.removeEventListener('mousemove', selectGridBlock);
-            //     div.removeEventListener('mouseout', unselectGridBlock);               
-            // });     
+
             // Finally, add it the body and container as children
-            container.appendChild(div);  
+            container.appendChild(div);
         }
     } else {
         // Same as above, just erases the previous grid before creating one
@@ -73,33 +83,38 @@ function createGrid(){
             div.className = 'grid';
 
             // Styles for the grid blocks
-            div.style.width = `${containerWidth / gridSize}px`;
-            div.style.height = `${containerHeight / gridSize}px`;
+            div.style.width = `${CONTAINER_WIDTH / gridSize}px`;
+            div.style.height = `${CONTAINER_HEIGHT / gridSize}px`;
 
             // Allows for click-hold coloring
             div.addEventListener('mouseover', colorGridBlock);
             div.addEventListener('mousedown', colorGridBlock);
-            // div.addEventListener('click', () => {
-            //     div.style.backgroundColor = 'red';
-            //     div.removeEventListener('mousemove', selectGridBlock);
-            //     div.removeEventListener('mouseout', unselectGridBlock);               
-            // });
-            container.appendChild(div); 
+
+            container.appendChild(div);
         }
     }
 }
 
 createGrid();
+// Display current size to user
+gridInfo.textContent = `Current size: ${gridSize}x${gridSize}`;
 
 // Listens to the user click and runs the function
 btnChangeSize.addEventListener('click', () => {
     gridSize = Number(prompt('Enter a new grid size:'));
-    if (gridSize >= 100) {
-        alert('Only grids below 100 allowed. Please enter a lower number.');
+    if (gridSize >= 100 || isNaN(gridSize)) {
+        alert('Please enter a valid number below 100.');
     } else {
         createGrid();
-    } 
+        gridInfo.textContent = `Current size: ${gridSize}x${gridSize}`;
+    }
 });
+
+// Changes to rainbow mode
+btnRainbowMode.addEventListener('click', () => {
+    colorMode = RAINBOW_MODE;
+});
+
 
 // Testing for element existence
 // let eleExist = !!document.getElementById('exists');

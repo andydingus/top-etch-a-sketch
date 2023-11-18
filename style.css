@@ -13,10 +13,18 @@ body {
 
 #container {
     display: grid;
-    height: 400px;
-    width: 400px;
+    /* height: 400px;
+    width: 400px; */
     border: 2px solid;
     /* height: auto; */
     justify-content: center;
     align-items: center;
+
+    /* Testing out box-shadow */
+    box-shadow: 0 0 15px gray;
+}
+
+#gridInfo {
+    font-size: 20px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
 }
