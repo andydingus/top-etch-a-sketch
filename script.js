@@ -13,7 +13,8 @@ const PURPLE = "rgb(127,0,255)";
 const COLORS = [RED, BLUE, GREEN, YELLOW, ORANGE, INDIGO, PURPLE];
 
 //// MODES
-const DEFAULT_MODE = true;
+let DEFAULT_MODE = true;
+let RAINBOW_MODE = false;
 
 
 // Element variables
@@ -45,9 +46,8 @@ function colorGridBlock(e) {
     if (colorMode === DEFAULT_MODE) {
         e.target.style.backgroundColor = selectedColor;
     } else if (colorMode === RAINBOW_MODE) {
-        for (i = 0; i < COLORS.length; i++) {
-            selectedColor = selectedColor[i];
-        }
+        // e.target.style.backgroundColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+        e.target.style.backgroundColor = `rgb(${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)},${Math.floor(Math.random() * 255)})`;
     }
 }
 
@@ -112,6 +112,8 @@ btnChangeSize.addEventListener('click', () => {
 
 // Changes to rainbow mode
 btnRainbowMode.addEventListener('click', () => {
+    RAINBOW_MODE = true;
+    DEFAULT_MODE = false;
     colorMode = RAINBOW_MODE;
 });
 
